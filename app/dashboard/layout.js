@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 import BrandLogo from "@/components/ui/BrandLogo";
+import packageJson from "@/package.json";
 
 const ThemeToggle = dynamic(() => import("@/components/ui/ThemeToggle"), {
   ssr: false,
@@ -78,6 +79,12 @@ export default function DashboardLayout({ children }) {
       </header>
 
       <main className={styles.main}>{children}</main>
+
+      <footer className={styles.footer}>
+        <span className={styles.version}>
+          v{packageJson.version}
+        </span>
+      </footer>
     </div>
   );
 }
