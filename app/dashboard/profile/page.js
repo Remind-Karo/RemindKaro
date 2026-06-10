@@ -355,6 +355,27 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+
+      <div className={styles.card}>
+        <div className={styles.cardHeader}>
+          <h2 className={styles.cardTitle}>
+            <Shield size={24} className={styles.cardTitleIcon} />
+            Security
+          </h2>
+        </div>
+        <div className={styles.securitySection}>
+          <p className={styles.securityText}>
+            Found a security vulnerability? We take security seriously.
+            Please report it responsibly.
+          </p>
+          <a
+            href="mailto:security@remindkro.in"
+            className={styles.securityLink}
+          >
+            Report Security Issue
+          </a>
+        </div>
+      </div>
     </div>
   );
 }
