@@ -40,10 +40,16 @@ export default function TaskForm({
   const [description, setDescription] = useState(
     initialData?.description || ''
   );
+  const getNextHourDefault = () => {
+    const date = new Date();
+    date.setHours(date.getHours() + 1, 0, 0, 0);
+    return toLocalDateTimeValue(date);
+  };
+
   const [deadline, setDeadline] = useState(
     initialData?.deadline
       ? new Date(initialData.deadline).toISOString().slice(0, 16)
-      : ''
+      : getNextHourDefault()
   );
 
   const [deadlineWarning, setDeadlineWarning] = useState('');
