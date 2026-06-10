@@ -113,6 +113,14 @@
   margin: 0;
 }
 
+.descriptionPlaceholder {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  font-style: italic;
+  opacity: 0.5;
+  margin: 0;
+}
+
 /* ── Urgency Badge ── */
 .urgencyBadge {
   display: inline-flex;

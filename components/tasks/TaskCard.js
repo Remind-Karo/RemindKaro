@@ -94,8 +94,12 @@ export default function TaskCard({ task, onStatusChange, onDelete, onEdit }) {
           </span>
         </div>
 
-        {task.description && (
+        {task.description ? (
           <p className={styles.description}>{task.description}</p>
+        ) : (
+          <p className={styles.descriptionPlaceholder}>
+            No description provided
+          </p>
         )}
 
         <div className={styles.meta}>
