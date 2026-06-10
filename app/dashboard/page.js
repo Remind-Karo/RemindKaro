@@ -97,6 +97,26 @@ export default function DashboardPage() {
     }
   };
 
+  const handleMarkAllCompleted = async () => {
+    const pendingIds = tasks
+      .filter((t) => t.status !== "completed")
+      .map((t) => t.id);
+
+    for (const id of pendingIds) {
+      await fetch(`/api/tasks/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "completed" }),
+      });
+    }
+
+    setTasks((prev) =>
+      prev.map((t) =>
+        pendingIds.includes(t.id) ? { ...t, status: "completed" } : t
+      )
+    );
+  };
+
   const handleClearCompleted = async () => {
     try {
       const completedIds = tasks
@@ -324,6 +344,14 @@ export default function DashboardPage() {
                 onClick={handleClearCompleted}
               >
                 Clear Completed
+              </button>
+            )}
+            {tasks.filter((t) => t.status !== "completed").length > 0 && (
+              <button
+                className={styles.markAllBtn}
+                onClick={handleMarkAllCompleted}
+              >
+                Mark All Done
               </button>
             )}
           </div>
