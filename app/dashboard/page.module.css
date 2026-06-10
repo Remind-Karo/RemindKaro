@@ -245,6 +245,17 @@
 .filterBtn[aria-pressed="true"] {
   background: var(--linear-primary);
   color: var(--linear-on-primary);
+  box-shadow: 0 0 12px rgba(94, 106, 210, 0.4), 0 0 24px rgba(94, 106, 210, 0.15);
+  animation: badgeGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes badgeGlow {
+  from {
+    box-shadow: 0 0 8px rgba(94, 106, 210, 0.3), 0 0 16px rgba(94, 106, 210, 0.1);
+  }
+  to {
+    box-shadow: 0 0 16px rgba(94, 106, 210, 0.5), 0 0 32px rgba(94, 106, 210, 0.2);
+  }
 }
 
 .taskCount {
