@@ -32,7 +32,11 @@
   border-color: var(--color-border-medium);
   border-left-color: inherit;
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  box-shadow:
+    0 8px 32px rgba(94, 106, 210, 0.15),
+    0 2px 8px rgba(0, 0, 0, 0.1),
+    inset 0 0 20px rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(2px);
 }
 
 /* ── Priority left accent ── */
