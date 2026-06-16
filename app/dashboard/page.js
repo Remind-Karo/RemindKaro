@@ -20,6 +20,12 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Dynamic document title with pending task count
+  useEffect(() => {
+    const pendingCount = tasks.filter((t) => t.status !== "completed" && t.status !== "archived").length;
+    document.title = pendingCount > 0 ? `(${pendingCount}) RemindKaro` : "RemindKaro";
+  }, [tasks]);
+
   useEscalationEngine(tasks);
 
   useEffect(() => {
