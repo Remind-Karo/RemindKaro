@@ -60,7 +60,8 @@ export default function TaskForm({
   const deadlineError = isPastDeadline ? DEADLINE_ERROR : deadlineWarning;
 
   const [priority, setPriority] = useState(initialData?.priority || 'medium');
-  const [category, setCategory] = useState(initialData?.category || 'General');
+  const [category, setCategory] = useState(initialData?.category || '');
+  const [isCategoryInvalid, setIsCategoryInvalid] = useState(false);
   const [assigneeId, setAssigneeId] = useState(initialData?.assigneeId || '');
 
   const [isProcessingVoice, setIsProcessingVoice] = useState(false);
@@ -111,6 +112,7 @@ export default function TaskForm({
       );
       setPriority(data.priority);
       setCategory(data.category);
+      setIsCategoryInvalid(false);
     } catch (err) {
       console.error(err);
       // Fallback to basic assignment if API fails
@@ -126,6 +128,11 @@ export default function TaskForm({
     // Final date/time validation before saving
     if (isDeadlineInPast(deadline)) {
       setDeadlineWarning(DEADLINE_ERROR);
+      return;
+    }
+
+    if (!category) {
+      setIsCategoryInvalid(true);
       return;
     }
 
@@ -265,16 +272,42 @@ export default function TaskForm({
                   <select
                     id="category"
                     aria-label="Task category"
-                    className={styles.select}
+                    aria-describedby={
+                      isCategoryInvalid ? 'category-error' : undefined
+                    }
+                    aria-invalid={isCategoryInvalid}
+                    className={`${styles.select} ${
+                      isCategoryInvalid ? styles.selectError : ''
+                    }`}
                     value={category}
-                    onChange={(e) => setCategory(e.target.value)}
+                    onChange={(e) => {
+                      e.currentTarget.setCustomValidity('');
+                      setCategory(e.target.value);
+                      setIsCategoryInvalid(false);
+                    }}
+                    onInvalid={(e) => {
+                      e.currentTarget.setCustomValidity(
+                        'Please select a category.'
+                      );
+                      setIsCategoryInvalid(true);
+                    }}
+                    onInput={(e) => e.currentTarget.setCustomValidity('')}
+                    required
                   >
+                    <option value="" disabled>
+                      Select category
+                    </option>
                     <option value="General">General</option>
                     <option value="Assignment">Assignment</option>
                     <option value="Work">Work</option>
                     <option value="Meeting">Meeting</option>
                     <option value="Personal">Personal</option>
                   </select>
+                  {isCategoryInvalid && (
+                    <p id="category-error" className={styles.fieldError}>
+                      Select a category before creating the task.
+                    </p>
+                  )}
                 </div>
               </div>
 

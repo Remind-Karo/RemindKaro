@@ -156,6 +156,19 @@
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
 }
 
+.selectError,
+.selectError:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.16);
+}
+
+.fieldError {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #f87171;
+}
+
 /* ── Footer ── */
 .footer {
   padding: 16px 24px;
