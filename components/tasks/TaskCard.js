@@ -102,8 +102,12 @@ export default function TaskCard({
           </span>
         </div>
 
-        {task.description && (
+        {task.description ? (
           <p className={styles.description}>{task.description}</p>
+        ) : (
+          <p className={`${styles.description} ${styles.descriptionPlaceholder}`}>
+            No description added
+          </p>
         )}
 
         <div className={styles.meta}>
