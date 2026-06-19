@@ -105,7 +105,9 @@ export default function TaskCard({
         {task.description ? (
           <p className={styles.description}>{task.description}</p>
         ) : (
-          <p className={`${styles.description} ${styles.descriptionPlaceholder}`}>
+          <p
+            className={`${styles.description} ${styles.descriptionPlaceholder}`}
+          >
             No description added
           </p>
         )}
