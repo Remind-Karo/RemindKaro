@@ -1,4 +1,5 @@
 "use client";
+import { version } from "../../package.json";
 
 import { useState, useMemo, useEffect } from "react";
 import styles from "./page.module.css";
@@ -569,6 +570,9 @@ export default function DashboardPage() {
           {activeWorkspace && (
             <WorkspaceActivityFeed workspaceId={activeWorkspace.id} />
           )}
+          <div className={styles.versionFooter}>
+            v{version}
+          </div>
         </aside>
       </div>
 
