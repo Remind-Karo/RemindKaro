@@ -491,3 +491,15 @@
   font-style: italic;
   font-weight: 450;
 }
+
+/* ── Version Footer ── */
+.versionFooter {
+  margin-top: auto;
+  padding-top: 12px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--color-text-quaternary, var(--color-text-tertiary));
+  opacity: 0.5;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
