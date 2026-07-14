@@ -37,7 +37,8 @@
 
 /* ── Priority left accent ── */
 .priority--high {
-  border-left-color: var(--color-urgent-600);
+  border-left: 3px solid hsl(350 85% 55%);
+  box-shadow: inset 3px 0 8px -3px hsl(350 85% 55% / 0.35);
 }
 .priority--medium {
   border-left-color: var(--color-medium-600);
