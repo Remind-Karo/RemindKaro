@@ -187,6 +187,30 @@ export default function DashboardPage() {
     }
   };
 
+  const handleMarkAllCompleted = async () => {
+    try {
+      const incompleteIds = filteredTasks
+        .filter((t) => t.status !== "completed")
+        .map((t) => t.id);
+
+      for (const id of incompleteIds) {
+        await fetch(`/api/tasks/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "completed" }),
+        });
+      }
+
+      setTasks((prev) =>
+        prev.map((t) =>
+          incompleteIds.includes(t.id) ? { ...t, status: "completed" } : t
+        )
+      );
+    } catch (err) {
+      console.error("Failed to mark all tasks as completed:", err);
+    }
+  };
+
   const handleVoiceInput = (text) => {
     setInitialVoiceText(text);
     setIsFormOpen(true);
@@ -487,6 +511,15 @@ export default function DashboardPage() {
               {filteredTasks.length}{" "}
               {filteredTasks.length === 1 ? "task" : "tasks"}
             </span>
+
+            {filteredTasks.some((t) => t.status !== "completed") && (
+              <button
+                className={styles.markAllBtn}
+                onClick={handleMarkAllCompleted}
+              >
+                Mark All Completed
+              </button>
+            )}
 
             {filteredTasks.some((t) => t.status === "completed") && (
               <button
