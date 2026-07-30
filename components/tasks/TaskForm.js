@@ -39,10 +39,15 @@ export default function TaskForm({
   workspaceMembers = [],
   currentUser = null,
 }) {
+  const DESCRIPTION_MAX_LENGTH = 500;
   const [title, setTitle] = useState(initialData?.title || '');
   const [description, setDescription] = useState(
     initialData?.description || ''
   );
+  const wordCount = (description || '').trim()
+    ? (description || '').trim().split(/\s+/).length
+    : 0;
+  const charCount = (description || '').length;
   const [deadline, setDeadline] = useState(
     initialData?.deadline
       ? new Date(initialData.deadline).toISOString().slice(0, 16)
@@ -216,14 +221,24 @@ export default function TaskForm({
                 fullWidth
               />
 
-              <Input
-                id="description"
-                label="Description (Optional)"
-                placeholder="Add details here..."
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                fullWidth
-              />
+              <div className={styles.fieldWrap}>
+                <label htmlFor="description" className={styles.fieldLabel}>
+                  Description (Optional)
+                </label>
+                <textarea
+                  id="description"
+                  className={styles.textarea}
+                  placeholder="Add details here..."
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  maxLength={DESCRIPTION_MAX_LENGTH}
+                  rows={3}
+                />
+                <div className={styles.charCounter}>
+                  <span>{wordCount} {wordCount === 1 ? 'word' : 'words'}</span>
+                  <span>{charCount}/{DESCRIPTION_MAX_LENGTH}</span>
+                </div>
+              </div>
 
               <Input
                 id="deadline"
