@@ -27,7 +27,10 @@ export default function DashboardLayout({ children }) {
 
   const handleLogout = async () => {
     try {
-      const res = await fetch("/api/auth/logout", { method: "POST" });
+      const res = await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
       if (res.ok) {
         router.push("/");
       }
