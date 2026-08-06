@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import styles from "./page.module.css";
 import Button from "@/components/ui/Button";
 import { Plus } from "lucide-react";
 import TaskCard from "@/components/tasks/TaskCard";
 import CalendarView from "@/components/ui/CalendarView";
 import VoiceMic from "@/components/ui/VoiceMic";
+import WakeWordListener from "@/components/ui/WakeWordListener";
 import TaskForm from "@/components/tasks/TaskForm";
 import WorkspaceSelector from "@/components/ui/WorkspaceSelector";
 import WorkspaceModal from "@/components/ui/WorkspaceModal";
@@ -187,10 +188,11 @@ export default function DashboardPage() {
     }
   };
 
-  const handleVoiceInput = (text) => {
+  const handleVoiceInput = useCallback((text) => {
+    setEditingTask(null);
     setInitialVoiceText(text);
     setIsFormOpen(true);
-  };
+  }, []);
 
   const handleSaveTask = async (taskData) => {
     try {
@@ -295,6 +297,12 @@ export default function DashboardPage() {
             onSelect={setActiveWorkspace}
             onCreateClick={() => setWorkspaceModalMode("create")}
             onManageClick={() => setWorkspaceModalMode("manage")}
+          />
+          <WakeWordListener
+            onWakeWord={handleVoiceInput}
+            paused={
+              isFormOpen || Boolean(selectedTask) || Boolean(workspaceModalMode)
+            }
           />
           <VoiceMic onResult={handleVoiceInput} />
           <Button
