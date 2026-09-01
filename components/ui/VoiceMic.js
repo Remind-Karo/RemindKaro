@@ -90,6 +90,9 @@ export default function VoiceMic({ onResult, onError, disabled = false }) {
           <div className={`${styles.pulseRing} ${styles.pulseRing2}`} />
         </>
       )}
+      <span className={styles.tooltip}>
+        {isRecording ? 'Click to stop recording' : 'Click to use voice input'}
+      </span>
       <button
         type="button"
         className={`${styles.micButton} ${isRecording ? styles.recording : ''}`}

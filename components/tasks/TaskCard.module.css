@@ -113,6 +113,13 @@
   margin: 0;
 }
 
+.descriptionPlaceholder {
+  color: var(--color-text-tertiary);
+  opacity: 0.5;
+  font-style: italic;
+  font-size: 12px;
+}
+
 /* ── Urgency Badge ── */
 .urgencyBadge {
   display: inline-flex;
@@ -252,10 +259,25 @@
     transform: none;
     pointer-events: all;
     flex-direction: row;
+    flex-wrap: wrap;
     margin-left: 0;
     margin-top: 10px;
   }
+
+  .actionBtn {
+    width: 44px;
+    height: 44px;
+  }
+
   .card {
     flex-direction: column;
+    width: 100%;
+    padding: 16px;
+  }
+
+  .topRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
 }

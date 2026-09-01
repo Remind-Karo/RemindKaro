@@ -1,0 +1,121 @@
+.wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.toggle {
+  min-height: 40px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--linear-radius-md);
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    background var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.toggle:hover:not(:disabled) {
+  color: var(--color-text-primary);
+  border-color: var(--color-border-strong);
+  background: var(--color-bg-tertiary);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid var(--linear-primary-hover);
+  outline-offset: 2px;
+}
+
+.toggle:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.enabled {
+  color: var(--linear-primary-hover);
+  border-color: rgba(94, 106, 210, 0.35);
+  background: rgba(94, 106, 210, 0.08);
+}
+
+.listening {
+  box-shadow: 0 0 14px rgba(94, 106, 210, 0.2);
+}
+
+.statusDot {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  background: var(--linear-primary-hover);
+  box-shadow: 0 0 0 3px rgba(94, 106, 210, 0.12);
+}
+
+.listening .statusDot {
+  animation: wakePulse 1.8s ease-in-out infinite;
+}
+
+.tooltip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  z-index: 20;
+  width: max-content;
+  max-width: 260px;
+  padding: 6px 10px;
+  transform: translateX(-50%);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  font-size: 11px;
+  line-height: 1.4;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.wrapper:hover .tooltip,
+.wrapper:focus-within .tooltip {
+  opacity: 1;
+}
+
+@keyframes wakePulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.55;
+    transform: scale(0.75);
+  }
+}
+
+@media (max-width: 640px) {
+  .wrapper,
+  .toggle {
+    width: 100%;
+  }
+
+  .tooltip {
+    left: 0;
+    bottom: auto;
+    top: calc(100% + 8px);
+    transform: none;
+  }
+}

@@ -77,6 +77,7 @@ export default function OnboardingPage() {
       const res = await fetch("/api/auth/onboarding", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           role: selectedRole,
           timezone: selectedTimezone,
