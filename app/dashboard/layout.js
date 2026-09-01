@@ -56,6 +56,15 @@ export default function DashboardLayout({ children }) {
             </span>
           </Link>
           <Link
+            href="/dashboard/calendar"
+            className={`${styles.navLink} ${pathname === "/dashboard/calendar" ? styles.active : ""}`}
+          >
+            <span className={styles.navLinkFull}>Calendar</span>
+            <span className={styles.navLinkShort} aria-hidden>
+              Cal
+            </span>
+          </Link>
+          <Link
             href="/dashboard/profile"
             onMouseEnter={playHoverSound}
             className={`${styles.navLink} ${pathname === "/dashboard/profile" ? styles.active : ""}`}

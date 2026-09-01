@@ -1,8 +1,14 @@
 "use client";
 
+
+import { useState, useMemo, useEffect } from "react";
+import Link from "next/link";
+
 import { useState, useMemo, useEffect, useCallback } from "react";
+
 import styles from "./page.module.css";
 import Button from "@/components/ui/Button";
+import { CalendarDays, Plus, Trash2, Volume2, VolumeX } from "lucide-react";
 import { Plus } from "lucide-react";
 import TaskCard from "@/components/tasks/TaskCard";
 import CalendarView from "@/components/ui/CalendarView";
@@ -13,16 +19,28 @@ import WorkspaceSelector from "@/components/ui/WorkspaceSelector";
 import WorkspaceModal from "@/components/ui/WorkspaceModal";
 import TaskDetailModal from "@/components/ui/TaskDetailModal";
 import useEscalationEngine from "@/components/hooks/useEscalationEngine";
+import useTasks from "@/components/hooks/useTasks";
 import DashboardSkeleton from "@/components/skeletons/DashboardSkeleton";
 import KanbanBoard from "@/components/tasks/KanbanBoard";
 import WorkspaceActivityFeed from "@/components/ui/WorkspaceActivityFeed";
 
 export default function DashboardPage() {
-  const [tasks, setTasks] = useState([]);
+  const {
+    tasks,
+    loading,
+    createTask,
+    updateTask,
+    updateTaskStatus,
+    deleteTask,
+    archiveTasks,
+  } = useTasks();
   const [filter, setFilter] = useState("all");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
   const [initialVoiceText, setInitialVoiceText] = useState("");
+  const [isClearingCompleted, setIsClearingCompleted] = useState(false);
+  const [sortBy, setSortBy] = useState("priority");
+  const [muted, setMuted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("deadline");
@@ -73,6 +91,11 @@ export default function DashboardPage() {
 
   // Fetch tasks (personal or workspace-specific)
   useEffect(() => {
+    const saved =
+      typeof window !== "undefined" &&
+      localStorage.getItem("notificationsMuted") === "true";
+
+    setMuted(saved);
     const fetchTasks = async () => {
       setLoading(true);
       try {
@@ -139,6 +162,7 @@ export default function DashboardPage() {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
+      await updateTaskStatus(id, newStatus);
       const res = await fetch(`/api/tasks/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -155,10 +179,7 @@ export default function DashboardPage() {
 
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(`/api/tasks/${id}`, { method: "DELETE" });
-      if (res.ok) {
-        setTasks((prev) => prev.filter((t) => t.id !== id));
-      }
+      await deleteTask(id);
     } catch (err) {
       console.error(err);
     }
@@ -166,6 +187,8 @@ export default function DashboardPage() {
 
   const handleClearCompleted = async () => {
     try {
+      await archiveTasks(completedIds);
+      const completedIds = tasks
       const completedIds = filteredTasks
         .filter((t) => t.status === "completed")
         .map((t) => t.id);
@@ -197,25 +220,9 @@ export default function DashboardPage() {
   const handleSaveTask = async (taskData) => {
     try {
       if (editingTask) {
-        const res = await fetch(`/api/tasks/${taskData.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(taskData),
-        });
-        if (res.ok) {
-          const { task } = await res.json();
-          setTasks((prev) => prev.map((t) => (t.id === task.id ? task : t)));
-        }
+        await updateTask(taskData);
       } else {
-        const res = await fetch("/api/tasks", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(taskData),
-        });
-        if (res.ok) {
-          const { task } = await res.json();
-          setTasks((prev) => [...prev, task]);
-        }
+        await createTask(taskData);
       }
       closeForm();
     } catch (err) {
@@ -305,6 +312,10 @@ export default function DashboardPage() {
             }
           />
           <VoiceMic onResult={handleVoiceInput} />
+          <Link href="/dashboard/calendar" className={styles.calendarLink}>
+            <CalendarDays size={16} strokeWidth={2.4} aria-hidden />
+            Calendar View
+          </Link>
           <Button
             variant="primary"
             size="md"

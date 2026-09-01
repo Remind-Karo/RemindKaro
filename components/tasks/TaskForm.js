@@ -35,6 +35,9 @@ export default function TaskForm({
   onClose,
   onSave,
   initialVoiceText = '',
+  initialDeadline = '',
+  showVoiceInput = true,
+  validateDeadline = true,
   workspaceId = null,
   workspaceMembers = [],
   currentUser = null,
@@ -46,6 +49,7 @@ export default function TaskForm({
   const [deadline, setDeadline] = useState(
     initialData?.deadline
       ? new Date(initialData.deadline).toISOString().slice(0, 16)
+      : initialDeadline
       : (() => {
           const nextHour = new Date();
           nextHour.setHours(nextHour.getHours() + 1);
@@ -56,7 +60,7 @@ export default function TaskForm({
 
   const [deadlineWarning, setDeadlineWarning] = useState('');
   const minDeadline = toLocalDateTimeValue(new Date());
-  const isPastDeadline = isDeadlineInPast(deadline);
+  const isPastDeadline = validateDeadline && isDeadlineInPast(deadline);
   const deadlineError = isPastDeadline ? DEADLINE_ERROR : deadlineWarning;
 
   const [priority, setPriority] = useState(initialData?.priority || 'medium');
@@ -69,10 +73,10 @@ export default function TaskForm({
 
   // If opened with voice text, process it immediately
   useEffect(() => {
-    if (initialVoiceText) {
+    if (showVoiceInput && initialVoiceText) {
       processVoiceInput(initialVoiceText);
     }
-  }, [initialVoiceText]);
+  }, [initialVoiceText, showVoiceInput]);
   // Listen for Escape key presses and dismiss the active modal.
   // Cleanup removes the listener when the modal unmounts.
 
@@ -126,7 +130,7 @@ export default function TaskForm({
     e.preventDefault();
 
     // Final date/time validation before saving
-    if (isDeadlineInPast(deadline)) {
+    if (validateDeadline && isDeadlineInPast(deadline)) {
       setDeadlineWarning(DEADLINE_ERROR);
       return;
     }
@@ -165,7 +169,7 @@ export default function TaskForm({
           </button>
         </header>
 
-        {!initialData && (
+        {!initialData && showVoiceInput && (
           <div className={styles.voiceSection}>
             <VoiceMic
               onResult={processVoiceInput}
@@ -233,15 +237,20 @@ export default function TaskForm({
                 onChange={(e) => {
                   setDeadline(e.target.value);
                   setDeadlineWarning(
-                    isDeadlineInPast(e.target.value) ? DEADLINE_ERROR : ''
+                    validateDeadline && isDeadlineInPast(e.target.value)
+                      ? DEADLINE_ERROR
+                      : ''
                   );
                 }}
                 onInvalid={(e) => {
-                  if (isDeadlineInPast(e.currentTarget.value)) {
+                  if (
+                    validateDeadline &&
+                    isDeadlineInPast(e.currentTarget.value)
+                  ) {
                     setDeadlineWarning(DEADLINE_ERROR);
                   }
                 }}
-                min={minDeadline}
+                min={validateDeadline ? minDeadline : undefined}
                 error={deadlineError}
                 required
                 fullWidth
