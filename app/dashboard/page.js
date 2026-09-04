@@ -188,6 +188,37 @@ export default function DashboardPage() {
     }
   };
 
+  const handleMarkAllCompleted = async () => {
+    const pendingTasks = filteredTasks.filter((t) => t.status !== "completed");
+    if (pendingTasks.length === 0) return;
+
+    if (
+      !window.confirm(
+        "Are you sure you want to mark all pending tasks as completed?"
+      )
+    )
+      return;
+
+    try {
+      const pendingIds = pendingTasks.map((t) => t.id);
+      for (const id of pendingIds) {
+        await fetch(`/api/tasks/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "completed" }),
+        });
+      }
+
+      setTasks((prev) =>
+        prev.map((t) =>
+          pendingIds.includes(t.id) ? { ...t, status: "completed" } : t
+        )
+      );
+    } catch (err) {
+      console.error("Failed to mark all completed:", err);
+    }
+  };
+
   const handleVoiceInput = useCallback((text) => {
     setEditingTask(null);
     setInitialVoiceText(text);
@@ -495,6 +526,15 @@ export default function DashboardPage() {
               {filteredTasks.length}{" "}
               {filteredTasks.length === 1 ? "task" : "tasks"}
             </span>
+
+            {filteredTasks.some((t) => t.status !== "completed") && (
+              <button
+                className={styles.clearBtn}
+                onClick={handleMarkAllCompleted}
+              >
+                Mark All Completed
+              </button>
+            )}
 
             {filteredTasks.some((t) => t.status === "completed") && (
               <button
