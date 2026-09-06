@@ -37,13 +37,17 @@
 
 /* ── Priority left accent ── */
 .priority--high {
-  border-left-color: var(--color-urgent-600);
+  border-left-color: hsl(350, 85%, 52%);
+  border-left-width: 4px;
+  box-shadow: inset 4px 0 8px hsl(350, 85%, 52%, 0.08);
 }
 .priority--medium {
-  border-left-color: var(--color-medium-600);
+  border-left-color: hsl(36, 85%, 48%);
+  border-left-width: 3px;
 }
 .priority--low {
-  border-left-color: var(--color-low-600);
+  border-left-color: hsl(160, 84%, 39%);
+  border-left-width: 2px;
 }
 
 /* ── Urgency state backgrounds ── */
