@@ -12,7 +12,7 @@
   gap: var(--space-2);
   min-width: 160px;
   padding: var(--space-2) var(--space-4);
-  background: rgba(25, 26, 27, 0.65);
+  background: var(--color-bg-secondary);
   backdrop-filter: blur(12px);
   border: 1px solid var(--color-border-medium);
   border-radius: var(--radius-md);
@@ -25,7 +25,7 @@
 }
 
 .selectorButton:hover {
-  background: rgba(30, 31, 33, 0.85);
+  background: var(--color-bg-tertiary);
   border-color: var(--linear-primary);
   box-shadow: 0 0 10px rgba(94, 106, 210, 0.15);
 }
@@ -54,7 +54,7 @@
   min-width: 220px;
   max-height: 280px;
   overflow-y: auto;
-  background: rgba(15, 16, 17, 0.95);
+  background: var(--color-bg-secondary);
   backdrop-filter: blur(16px);
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-md);
@@ -99,6 +99,7 @@
 .createButton {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: var(--space-2);
   color: var(--linear-primary-hover);
   font-weight: 500;
@@ -114,7 +115,7 @@
   align-items: center;
   justify-content: center;
   padding: var(--space-2);
-  background: rgba(25, 26, 27, 0.65);
+  background: var(--color-bg-secondary);
   border: 1px solid var(--color-border-medium);
   border-radius: var(--radius-md);
   color: var(--color-text-tertiary);
@@ -125,7 +126,7 @@
 .manageButton:hover {
   color: var(--color-text-primary);
   border-color: var(--color-border-strong);
-  background: rgba(30, 31, 33, 0.85);
+  background: var(--color-bg-tertiary);
 }
 
 @keyframes slideInUp {

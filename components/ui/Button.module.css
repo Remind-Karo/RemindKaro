@@ -94,6 +94,13 @@
   cursor: not-allowed;
 }
 
+.label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
 .btn--loading .label {
   opacity: 0.65;
 }
