@@ -3,13 +3,16 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Checks tasks periodically and triggers browser notifications / audio chimes for urgent/overdue tasks.
+ * Checks tasks periodically and triggers browser notifications / audio chimes
+ * for urgent/overdue tasks.
+ *
+
  */
 export default function useEscalationEngine(tasks) {
   const notifiedTasksRef = useRef(new Set());
 
   useEffect(() => {
-    // Request permission if not granted
+    // Request notification permission if it has not been decided yet.
     if (typeof window !== 'undefined' && 'Notification' in window) {
       if (Notification.permission === 'default') {
         Notification.requestPermission();
@@ -18,13 +21,18 @@ export default function useEscalationEngine(tasks) {
 
     const checkTasks = () => {
       if (!tasks || tasks.length === 0) return;
-      if (typeof window === 'undefined' || !('Notification' in window)) return;
+
+      if (typeof window === 'undefined' || !('Notification' in window)) {
+        return;
+      }
+
       if (Notification.permission !== 'granted') return;
 
       const now = new Date();
       let shouldPlayChime = false;
 
       tasks.forEach((task) => {
+        // Ignore completed tasks.
         if (task.status === 'completed') return;
 
         const deadline = new Date(task.deadline);
@@ -35,6 +43,7 @@ export default function useEscalationEngine(tasks) {
         // 2. Task is critical (< 1 hour left)
 
         let escalationType = null;
+
         if (hoursLeft < 0 && hoursLeft > -1) {
           escalationType = 'overdue';
         } else if (hoursLeft > 0 && hoursLeft < 1) {
@@ -43,6 +52,8 @@ export default function useEscalationEngine(tasks) {
 
         if (escalationType) {
           const notificationId = `${task.id}-${escalationType}`;
+
+          // Only notify/chime once for each escalation type.
           if (!notifiedTasksRef.current.has(notificationId)) {
             notifiedTasksRef.current.add(notificationId);
             shouldPlayChime = true;
@@ -51,10 +62,11 @@ export default function useEscalationEngine(tasks) {
               escalationType === 'overdue'
                 ? `🚨 OVERDUE: ${task.title}`
                 : `⏳ CRITICAL: ${task.title}`;
+
             const body =
               escalationType === 'overdue'
-                ? `This task missed its deadline.`
-                : `This task is due in less than an hour!`;
+                ? 'This task missed its deadline.'
+                : 'This task is due in less than an hour!';
 
             new Notification(title, {
               body,
@@ -65,27 +77,48 @@ export default function useEscalationEngine(tasks) {
         }
       });
 
-      const muted =
-        typeof window !== 'undefined' &&
-        localStorage.getItem('notificationsMuted') === 'true';
+      /*
+       * Check the user's sound preference.
+       *
+       * "remindkaro-sound" is the key used by the dashboard sound toggle.
+       *
+       * true / missing  -> sound enabled
+       * false            -> sound disabled
+       */
+      const soundEnabled = localStorage.getItem('remindkaro-sound') !== 'false';
 
-      if (shouldPlayChime && !muted) {
-        // Try to play a generic system beep or loaded sound
+      // Only play the chime when:
+      // 1. An escalation happened
+      // 2. The user has not disabled sounds
+      if (shouldPlayChime && soundEnabled) {
         try {
-          const audioCtx = new (
-            window.AudioContext || window.webkitAudioContext
-          )();
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+
+          if (!AudioContext) {
+            console.warn('AudioContext is not supported by this browser.');
+            return;
+          }
+
+          const audioCtx = new AudioContext();
+
           const oscillator = audioCtx.createOscillator();
           const gainNode = audioCtx.createGain();
 
           oscillator.type = 'sine';
-          oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // A5
+
+          // Start at A5 (880Hz)
+          oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
+
+          // Drop to A4 (440Hz) over 0.5 seconds
           oscillator.frequency.exponentialRampToValueAtTime(
             440,
             audioCtx.currentTime + 0.5
-          ); // A4
+          );
 
+          // Start with a low volume
           gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+
+          // Fade the sound out smoothly
           gainNode.gain.exponentialRampToValueAtTime(
             0.001,
             audioCtx.currentTime + 0.5
@@ -96,16 +129,25 @@ export default function useEscalationEngine(tasks) {
 
           oscillator.start();
           oscillator.stop(audioCtx.currentTime + 0.5);
+
+          // Close the AudioContext after the chime finishes.
+          oscillator.addEventListener('ended', () => {
+            audioCtx.close().catch(() => {});
+          });
         } catch (err) {
           console.error('Audio chime failed:', err);
         }
       }
     };
 
-    // Run immediately then every 1 minute
+    // Run immediately.
     checkTasks();
+
+    // Then check every minute.
     const interval = setInterval(checkTasks, 60 * 1000);
 
+    // Cleanup interval when the component unmounts
+    // or the tasks change.
     return () => clearInterval(interval);
   }, [tasks]);
 }
