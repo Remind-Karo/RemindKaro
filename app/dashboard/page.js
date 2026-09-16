@@ -459,15 +459,13 @@ export default function DashboardPage() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className={styles.searchInput}
               />
-              {searchQuery && (
-                <button
-                  className={styles.searchClear}
-                  onClick={() => setSearchQuery("")}
-                  aria-label="Clear Search"
-                >
-                  ✕
-                </button>
-              )}
+              <button
+                className={`${styles.searchClear} ${searchQuery ? styles.searchClearVisible : ""}`}
+                onClick={() => setSearchQuery("")}
+                aria-label="Clear Search"
+              >
+                ✕
+              </button>
             </div>
 
             <div className={styles.filterGroup}>
