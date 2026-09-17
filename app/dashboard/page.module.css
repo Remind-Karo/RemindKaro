@@ -485,7 +485,14 @@
   cursor: pointer;
   color: #aaa;
   font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
   transition: opacity 0.2s ease;
+}
+
+.searchClearVisible {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .sortSelect {

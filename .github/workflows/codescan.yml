@@ -31,19 +31,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set up Java 17
+        id: setup-java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
       - name: Cache files
         uses: actions/cache@v3
         with:
           path: |
             ~/.sonar
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
+          key: ${{ runner.os }}-sonar-java17-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-sonar-java17
 
-      - name: Set up Java 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
+      - name: Verify Java version
+        run: java -version
 
       - name: Run Analysis
         uses: codescan-io/codescan-scanner-action@5b2e8c5683ef6a5adc8fa3b7950bb07debccce12
@@ -51,6 +55,9 @@ jobs:
           login: ${{ secrets.CODESCAN_AUTH_TOKEN }}
           organization: ${{ secrets.CODESCAN_ORGANIZATION_KEY }}
           projectKey: ${{ secrets.CODESCAN_PROJECT_KEY }}
+        env:
+          JAVA_HOME: ${{ steps.setup-java.outputs.path }}
+          SONAR_SCANNER_OPTS: -Xmx512m
 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v3
