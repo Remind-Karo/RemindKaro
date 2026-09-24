@@ -43,17 +43,26 @@
   border-radius: var(--radius-full);
   transition:
     color var(--transition-fast),
-    background var(--transition-fast);
+    background var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
 }
 
-.navLink:hover {
+.navLink:hover,
+.navLink:focus-visible {
   color: var(--color-text-primary);
   background: var(--color-bg-tertiary);
+  box-shadow: 0 0 0 3px rgba(94, 106, 210, 0.1);
+}
+
+.navLink:focus-visible {
+  outline: none;
 }
 
 .navLink.active {
   color: var(--color-text-primary);
   background: var(--color-bg-tertiary);
+  box-shadow: inset 0 0 0 1px var(--color-border-medium);
 }
 
 .navDivider {
