@@ -62,6 +62,7 @@ export default function TaskForm({
   const [priority, setPriority] = useState(initialData?.priority || 'medium');
   const [category, setCategory] = useState(initialData?.category || '');
   const [isCategoryInvalid, setIsCategoryInvalid] = useState(false);
+  const [descriptionError, setDescriptionError] = useState('');
   const [assigneeId, setAssigneeId] = useState(initialData?.assigneeId || '');
 
   const [isProcessingVoice, setIsProcessingVoice] = useState(false);
@@ -124,6 +125,11 @@ export default function TaskForm({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (description.length > 200) {
+      setDescriptionError('Description must be 200 characters or fewer.');
+      return;
+    }
 
     // Final date/time validation before saving
     if (isDeadlineInPast(deadline)) {
@@ -216,14 +222,31 @@ export default function TaskForm({
                 fullWidth
               />
 
-              <Input
-                id="description"
-                label="Description (Optional)"
-                placeholder="Add details here..."
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                fullWidth
-              />
+              <div>
+                <Input
+                  id="description"
+                  label="Description (Optional)"
+                  placeholder="Add details here..."
+                  value={description}
+                  onChange={(e) => {
+                    setDescription(e.target.value);
+                    setDescriptionError('');
+                  }}
+                  maxLength={200}
+                  error={descriptionError}
+                  fullWidth
+                />
+
+                <div
+                  className={
+                    description.length >= 180
+                      ? styles.charCounterWarning
+                      : styles.charCounter
+                  }
+                >
+                  <span>{description.length} / 200</span>
+                </div>
+              </div>
 
               <Input
                 id="deadline"

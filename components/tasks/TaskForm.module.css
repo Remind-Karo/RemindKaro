@@ -195,3 +195,19 @@
     transform: rotate(360deg);
   }
 }
+
+.charCounter {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.charCounterWarning {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #f59e0b;
+}
