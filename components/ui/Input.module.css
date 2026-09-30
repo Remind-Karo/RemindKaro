@@ -5,6 +5,7 @@
   flex-direction: column;
   gap: 6px;
 }
+
 .fullWidth {
   width: 100%;
 }
@@ -40,10 +41,10 @@
 .input {
   width: 100%;
   padding: 13px 16px;
-  background: #f8fafc;
-  border: 1.5px solid #e2e8f0;
+  background: var(--color-bg-primary);
+  border: 1.5px solid var(--color-border-medium);
   border-radius: 14px;
-  color: #0f172a;
+  color: var(--color-text-primary);
   font-family: var(--font-body);
   font-size: 15px;
   font-weight: 500;
@@ -57,31 +58,31 @@
 }
 
 .input::placeholder {
-  color: #cbd5e1;
+  color: var(--color-text-tertiary);
   font-weight: 400;
 }
 
 .input:hover:not(:disabled) {
-  border-color: #cbd5e1;
-  background: #ffffff;
+  border-color: var(--color-border-strong);
+  background: var(--color-bg-secondary);
 }
 
 .input:focus {
-  border-color: #3b82f6;
-  background: #ffffff;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  border-color: var(--color-info);
+  background: var(--color-bg-secondary);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
 }
 
 .input:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  background: #f1f5f9;
+  background: var(--color-bg-tertiary);
 }
 
 .hasError .input {
-  border-color: #ef4444;
-  background: #fff;
-  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.08);
+  border-color: var(--color-error);
+  background: var(--color-bg-primary);
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12);
 }
 
 .errorMsg {
