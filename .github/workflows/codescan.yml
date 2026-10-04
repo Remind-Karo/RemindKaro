@@ -38,6 +38,11 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      - name: Configure Java 17 environment
+        run: |
+          echo "JAVA_HOME=${{ steps.setup-java.outputs.path }}" >> $GITHUB_ENV
+          echo "${{ steps.setup-java.outputs.path }}/bin" >> $GITHUB_PATH
+
       - name: Cache files
         uses: actions/cache@v3
         with:
@@ -50,14 +55,14 @@ jobs:
         run: java -version
 
       - name: Run Analysis
-        uses: codescan-io/codescan-scanner-action@v2.0.0
+        uses: codescan-io/codescan-scanner-action@5b2e8c5683ef6a5adc8fa3b7950bb07debccce12
         with:
           login: ${{ secrets.CODESCAN_AUTH_TOKEN }}
           organization: ${{ secrets.CODESCAN_ORGANIZATION_KEY }}
           projectKey: ${{ secrets.CODESCAN_PROJECT_KEY }}
         env:
-          JAVA_HOME: ${{ env.JAVA_HOME_17_x64 }}
-          PATH: ${{ env.JAVA_HOME_17_x64 }}/bin:${{ env.PATH }}
+          JAVA_HOME: ${{ env.JAVA_HOME }}
+          PATH: ${{ env.PATH }}
           SONAR_SCANNER_OPTS: -Xmx512m
 
       - name: Upload SARIF file
