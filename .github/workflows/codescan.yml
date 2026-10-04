@@ -38,10 +38,14 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Configure Java 17 environment
+      - name: Configure Java 17 as system default
         run: |
-          echo "JAVA_HOME=${{ steps.setup-java.outputs.path }}" >> $GITHUB_ENV
-          echo "${{ steps.setup-java.outputs.path }}/bin" >> $GITHUB_PATH
+          JAVA17="${{ steps.setup-java.outputs.path }}"
+          echo "JAVA_HOME=$JAVA17" >> $GITHUB_ENV
+          echo "$JAVA17/bin" >> $GITHUB_PATH
+          sudo update-alternatives --install /usr/bin/java java "$JAVA17/bin/java" 100
+          sudo update-alternatives --set java "$JAVA17/bin/java"
+          java -version
 
       - name: Cache files
         uses: actions/cache@v3
@@ -50,9 +54,6 @@ jobs:
             ~/.sonar
           key: ${{ runner.os }}-sonar-java17-${{ github.run_id }}
           restore-keys: ${{ runner.os }}-sonar-java17
-
-      - name: Verify Java version
-        run: java -version
 
       - name: Run Analysis
         uses: codescan-io/codescan-scanner-action@5b2e8c5683ef6a5adc8fa3b7950bb07debccce12
