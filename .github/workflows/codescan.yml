@@ -61,8 +61,6 @@ jobs:
           organization: ${{ secrets.CODESCAN_ORGANIZATION_KEY }}
           projectKey: ${{ secrets.CODESCAN_PROJECT_KEY }}
         env:
-          JAVA_HOME: ${{ env.JAVA_HOME }}
-          PATH: ${{ env.PATH }}
           SONAR_SCANNER_OPTS: -Xmx512m
 
       - name: Upload SARIF file
