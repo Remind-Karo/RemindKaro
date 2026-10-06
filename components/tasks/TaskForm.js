@@ -229,8 +229,10 @@ export default function TaskForm({
                   placeholder="Add details here..."
                   value={description}
                   onChange={(e) => {
-                    setDescription(e.target.value);
-                    setDescriptionError('');
+                    if (e.target.value.length <= 200) {
+                      setDescription(e.target.value);
+                      setDescriptionError('');
+                    }
                   }}
                   maxLength={200}
                   error={descriptionError}
