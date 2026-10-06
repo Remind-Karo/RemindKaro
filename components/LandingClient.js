@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import {
   Search,
@@ -76,6 +76,7 @@ const TESTIMONIALS = [
 export default function LandingClient({ isLoggedIn }) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [billing, setBilling] = useState('monthly');
+  const [ctaHovered, setCtaHovered] = useState(false);
   const { scrollYProgress } = useScroll();
   const bgX1 = useTransform(scrollYProgress, [0, 1], ['0%', '-15%']);
   const bgX2 = useTransform(scrollYProgress, [0, 1], ['-10%', '5%']);
@@ -90,6 +91,10 @@ export default function LandingClient({ isLoggedIn }) {
     document.body.classList.toggle('site-nav-open', mobileNavOpen);
     return () => document.body.classList.remove('site-nav-open');
   }, [mobileNavOpen]);
+
+  const handleCtaClick = useCallback(() => {
+    setMobileNavOpen(false);
+  }, []);
 
   const navItems = [
     { icon: <Search size={20} />, label: 'TRACK' },
@@ -265,7 +270,10 @@ export default function LandingClient({ isLoggedIn }) {
               </button>
               <Link
                 href={isLoggedIn ? '/dashboard' : '/signup'}
-                className={styles.ctaBtn}
+                className={`${styles.ctaBtn} ${ctaHovered ? styles.ctaBtnHover : ''}`}
+                onMouseEnter={() => setCtaHovered(true)}
+                onMouseLeave={() => setCtaHovered(false)}
+                onClick={handleCtaClick}
               >
                 {isLoggedIn ? 'Dashboard' : 'Get Started'}
               </Link>
@@ -502,7 +510,7 @@ export default function LandingClient({ isLoggedIn }) {
                   <div className={styles.marqueeStars} aria-hidden>
                     ★★★★★
                   </div>
-                  <p className={styles.marqueeQuote}>&quot;{t.text}&quot;</p>
+                  <p className={styles.marqueeQuote}&quot;{t.text}&quot;</p>
                   <p className={styles.marqueeName}>{t.name}</p>
                   <p className={styles.marqueeRole}>{t.role}</p>
                 </div>
