@@ -44,6 +44,51 @@
   display: flex;
   gap: 10px;
   align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.calendarLink {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 14px;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--linear-radius-md);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.calendarLink:hover,
+.calendarLink:focus-visible {
+  color: var(--color-text-primary);
+  background: var(--color-bg-tertiary);
+  border-color: rgba(94, 106, 210, 0.5);
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.22),
+    0 0 0 3px rgba(94, 106, 210, 0.12);
+  transform: translateY(-1px);
+}
+
+.calendarLink:focus-visible {
+  outline: none;
+}
+
+.calendarLink:active {
+  transform: translateY(0);
 }
 
 /* ── Stats grid ── */
@@ -222,6 +267,10 @@
 
   .sidePanel {
     position: static;
+  }
+
+  .calendarLink {
+    flex: 1 1 auto;
   }
 }
 
